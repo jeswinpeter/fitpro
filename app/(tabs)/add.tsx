@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Alert, Button, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AddWorkoutScreen() {
     const [exercise, setExercise] = useState('');
@@ -11,17 +12,25 @@ export default function AddWorkoutScreen() {
             Alert.alert('Please fill all the fields');
             return;
         }
-    }
 
-    const workout = {
+        const workout = {
         id: Date.now(),
         exercise, 
         weight: parseFloat(weight),
         reps: parseInt(reps),
         date: new Date().toISOString(),
+        };
+
+        console.log('Workout saved:', workout);// Not aactually saved
+        Alert.alert('Workout saved!');
+        setExercise('');
+        setWeight('');
+        setReps('');
     };
+
+
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Text style={styles.heading}>Add Workout</Text>
 
             <TextInput
@@ -31,12 +40,24 @@ export default function AddWorkoutScreen() {
                 onChangeText={setExercise}
             />
                 
-            <TextInput>
+            <TextInput
+                style={styles.input}
+                placeholder="Weight (kg)"
+                keyboardType="numeric"
+                value={weight}
+                onChangeText={setWeight}
+            />
 
-            </TextInput>
+            <TextInput
+                style={styles.input}
+                placeholder="Reps"
+                keyboardType="numeric"
+                value={reps}
+                onChangeText={setReps}
+            />
 
             <Button title='Save Workout' onPress={handleAddWorkout}/>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -58,5 +79,5 @@ const styles=StyleSheet.create({
         padding: 10,
         marginBottom: 15,
         borderRadius: 5,
-    }
+    },
 });
