@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Alert, Button, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AddWorkoutScreen() {
     const [exercise, setExercise] = useState('');
     const[weight, setWeight] = useState('');
     const[reps, setReps] = useState('');
 
-    const handleAddWorkout = () => {
+    const handleAddWorkout = async () => {
         if(!exercise || !weight || !reps) {
             Alert.alert('Please fill all the fields');
             return;
         }
 
-        const workout = {
+        const newWorkout = {
         id: Date.now(),
         exercise, 
         weight: parseFloat(weight),
@@ -21,16 +22,33 @@ export default function AddWorkoutScreen() {
         date: new Date().toISOString(),
         };
 
-        console.log('Workout saved:', workout);// Not aactually saved
-        Alert.alert('Workout saved!');
-        setExercise('');
-        setWeight('');
-        setReps('');
+        try{
+            // Getting existing data
+            const existingData = await AsyncStorage.getItem('workouts');
+            const workouts = existingData ? JSON.parse(existingData) : [];
+
+            // Add new workout
+            workouts.push(newWorkout);
+
+            // Save it back
+            await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+
+            console.log('Workout saved:', newWorkout);// Not aactually saved
+            Alert.alert('Workout saved!');
+            setExercise('');
+            setWeight('');
+            setReps('');
+        }
+        catch (error) {
+            console.error('Error saving workout:', error);
+            Alert.alert('Something went wrong while saving!');
+        }
     };
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        //Avoid notch and notification bar
+        <SafeAreaView style={styles.container}> 
             <Text style={styles.heading}>Add Workout</Text>
 
             <TextInput
@@ -61,6 +79,7 @@ export default function AddWorkoutScreen() {
     );
 }
 
+// Styling for reuse
 const styles=StyleSheet.create({
     container:{
         padding: 20,
