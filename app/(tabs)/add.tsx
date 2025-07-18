@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Alert, Button, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
 
 export default function AddWorkoutScreen() {
     const [exercise, setExercise] = useState('');
-    const[weight, setWeight] = useState('');
-    const[reps, setReps] = useState('');
+    const [weight, setWeight] = useState('');
+    const [reps, setReps] = useState('');
+    const [muscleGroup, setMuscleGroup] = useState('Full Body');
 
     const handleAddWorkout = async () => {
-        if(!exercise || !weight || !reps) {
+        if(!exercise || !weight || !reps || !muscleGroup) {
             Alert.alert('Please fill all the fields');
             return;
         }
@@ -19,6 +21,7 @@ export default function AddWorkoutScreen() {
         exercise, 
         weight: parseFloat(weight),
         reps: parseInt(reps),
+        muscleGroup,
         date: new Date().toISOString(),
         };
 
@@ -38,6 +41,7 @@ export default function AddWorkoutScreen() {
             setExercise('');
             setWeight('');
             setReps('');
+            setMuscleGroup('Full Body')
         }
         catch (error) {
             console.error('Error saving workout:', error);
@@ -74,6 +78,23 @@ export default function AddWorkoutScreen() {
                 onChangeText={setReps}
             />
 
+            <Text style={styles.label}>Muscle Group</Text>
+            <View style={styles.pickerContainer}>
+                <Picker 
+                    selectedValue={muscleGroup}
+                    onValueChange={(itemValue) => setMuscleGroup(itemValue)}
+                >
+                    <Picker.Item label="Arms" value={"Arms"}/>
+                    <Picker.Item label="Chest" value={"Chest"}/>
+                    <Picker.Item label="Back" value={"Back"}/>
+                    <Picker.Item label="Leg" value={"Leg"}/>
+                    <Picker.Item label="Shoulder" value={"Shoulder"}/>
+                    <Picker.Item label="Core" value={"Core"}/>
+                    <Picker.Item label="Full Body" value={"Full Body"}/>
+
+                </Picker>
+            </View>
+
             <Button title='Save Workout' onPress={handleAddWorkout}/>
         </SafeAreaView>
     );
@@ -85,6 +106,17 @@ const styles=StyleSheet.create({
         padding: 20,
         flex: 1,
         backgroundColor: '#fff',
+    },
+    label:{
+        fontSize: 16,
+        marginBottom: 5,
+    },
+    pickerContainer:{
+        borderWidth: 1,
+        borderColor: '#999',
+        borderRadius: 5,
+        marginBottom: 15,
+        overflow: 'hidden',
     },
     heading:{
         fontSize: 24,
