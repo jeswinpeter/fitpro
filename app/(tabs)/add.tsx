@@ -32,7 +32,7 @@ export default function AddWorkoutScreen() {
 
             // Add new workout
             workouts.push(newWorkout);
-
+ 
             // Save it back
             await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
 

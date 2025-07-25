@@ -5,9 +5,9 @@ import { useRouter } from 'expo-router';
 const muscleGroups = [
     { name: 'Chest', color: '#FF6B6B'},
     { name: 'Back', color: '#4ECDC4'},
-    { name: 'Legs', color: '#FFD93D'},
-    { name: 'Arms', color: '#A29BFE'},
-    { name: 'Shoulders', color: '#FDCB6E'},
+    { name: 'Leg', color: '#FFD93D'},
+    { name: 'Arm', color: '#A29BFE'},
+    { name: 'Shoulder', color: '#FDCB6E'},
     { name: 'Core', color: '#81ECEC'},
 ];
 
